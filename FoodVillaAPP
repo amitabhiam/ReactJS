@@ -1,1 +1,179 @@
+// This is Project for learning React, Lecture 5 from Namaste React
 
+import React, { Children, Suspense, lazy } from "react";
+import ReactDOM from "react-dom/client";
+import Header from "./Header.js";
+import Body from "./Body.js";
+import Footer from "./Footer.js";
+import About from "./About.js";
+import Error from "./Error.js";
+import Contact from "./Contact.js";
+import RestaurantMenu from "./RestaurantMenu.js";
+import {createBrowserRouter, RouterProvider, Outlet} from "react-router-dom";
+import { lazy } from "react";
+import Shimmer from "./Shimmer.js";
+
+// import { IMG_CDN_URL } from "./Config.js";
+
+
+            /**
+             * Header
+             *  -Logo(title)
+             *  -Nav Items(Right Side)
+             *  -Cart
+             * Body
+             *      Search Bar
+             *      Restrauntlist
+             *      Restaurant Cards
+             *          -Image
+             *          -Name
+             *          -Rating
+             *          -Cusines
+             * Footer
+             *  - Links
+             *  - Copyright
+             */
+
+
+
+// const config = [
+//     {
+//         type:"carousel",
+//         cards: [
+//             {
+//                 offerName: "50% OFF"
+//             },
+//             {
+//                 offerName:"No Delivery Charge"
+//             }
+//         ]
+//     },
+//     {
+//         type:"resturants",
+//         cards: [
+//             {
+//                 name: "Burger King",
+//                 image: "https://static.wixstatic.com/media/f1892b_f2726f2794774b37a33f9ff4b470e50e~mv2.jpg/v1/fill/w_594,h_462,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/epic-burger-chicagos-best-burger_0004_ed.jpg",
+//                 cusines: ["Burger", "American"],
+//                 rating: "4.2",
+//             },
+//             {
+//                 name: "KFC",
+//                 image: "https://static.wixstatic.com/media/f1892b_f2726f2794774b37a33f9ff4b470e50e~mv2.jpg/v1/fill/w_594,h_462,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/epic-burger-chicagos-best-burger_0004_ed.jpg",
+//                 cusines: ["Nuggets", "Wings"],
+//                 rating: "4.2",
+//             }
+//         ]
+//     }
+
+// ]
+
+
+
+
+
+// incase don't want to use the word props below syntax is also fine:
+// const RestaurantCard = ({ restaurant })
+
+
+
+//props - properties
+
+// we pass arguments and receive parameters
+
+// react warps all these below mentioned like properties in props
+//... this is spread operators - insetead of writing each prop individually we can write it as spread operator and it will take everything with it
+
+// no key <<<< index key  (use only if have nothing)<<< unique key (best practice)
+
+
+
+
+
+// React.Fragment - Its a component which is exported by React
+// This can also be used as <> </>, the purpose is to have one parent element
+// JSX can only have one parent, so to avoid using div we can use Fragment
+
+// const AppLayout = () => {
+//     return (
+//         <>
+//           <Header />
+//           <Body />
+//           <Footer />
+//         </>
+//     );
+// };
+
+// const root = ReactDOM.createRoot(document.getElementById("root"));
+
+// root.render(<AppLayout />);
+
+
+// const AppLayout = () => {
+//     return (
+//         <>
+//           <Header />
+//           <Body />
+//           <Footer />
+//         </>
+//     );
+// };
+
+// const root = ReactDOM.createRoot(document.getElementById("root"));
+
+// root.render(<AppLayout />);
+
+const Instamart = lazy (() => import("./Instamart.js"));
+
+const AppLayout = () => {
+  return (
+    <>
+      <Header />
+      <Outlet />
+      <Footer />
+    </>
+  );
+};
+
+const appRouter = createBrowserRouter ([
+  {
+    path: "/",
+    element:<AppLayout />,
+    errorElement: <Error />,
+    children : [
+      {
+        path: "/",
+        element:<Body />,
+      },
+      {
+        path: "/about",
+        element:<About />,
+      },
+      {
+        path: "/contact",
+        element:<Contact />,
+      },
+      {
+        path: "restaurant/:resId",
+        element:<RestaurantMenu />,
+      },
+      {
+        path: "/instamart",
+        element:<Suspense fallback = {<Shimmer />}>
+          <RestaurantMenu />
+        </Suspense>,
+      },
+    ],
+  },
+  // {
+  //   path: "/about",
+  //   element: <About />,
+  // },
+  // {
+  //   path: "/contact",
+  //   element: <Contact />,
+  // },
+]);
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<RouterProvider router = {appRouter} />);
